@@ -1,43 +1,32 @@
 from flask import Flask, render_template, request
-import os
 app = Flask(__name__)
  
 poll_data = {
-   'question' : 'Which web framework do you use?',
-   'fields'   : ['Flask', 'Django', 'TurboGears', 'web2py', 'pylonsproject']
+  'question': 'Which course is the worst?',
+  'fields': ['Introduction to Programming', 'Systems Management', 'Digital Circuits', 'Math 1: Linear Algebra', 'Communication Skills']
 }
-filename = 'data.txt'
+
+votes = {}
+
+# initialize
+for f in poll_data['fields']:
+    votes[f] = 0
  
 @app.route('/')
 def root():
+    # show poll on the landing page
     return render_template('poll.html', data=poll_data)
  
-@app.route('/poll')
-def poll():
-    vote = request.args.get('field')
- 
-    out = open(filename, 'a')
-    out.write( vote + '\n' )
-    out.close()
- 
-    return render_template('thankyou.html', data=poll_data)
- 
 @app.route('/results')
-def show_results():
-    votes = {}
-    for f in poll_data['fields']:
-        votes[f] = 0
+def poll():
+    field = request.args.get('field')
+
+    if field:
+        votes[field] += 1
  
-    f  = open(filename, 'r')
-    for line in f:
-        vote = line.rstrip("\n")
-        votes[vote] += 1
- 
+    # show results
     return render_template('results.html', data=poll_data, votes=votes)
  
- 
- 
-if __name__ == "__main__":
-    app.run(debug=True)
+app.run(debug=True)
 
 #credits: https://code-maven.com/a-polling-station-with-flask
