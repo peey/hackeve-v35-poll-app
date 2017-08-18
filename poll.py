@@ -17,16 +17,15 @@ def root():
     # show poll on the landing page
     return render_template('poll.html', data=poll_data)
  
-@app.route('/results')
+@app.route('/results', methods=['GET', 'POST'])
 def poll():
-    field = request.args.get('field')
-
-    if field:
+    if request.method == 'POST':
+        field = request.form['field']
         votes[field] += 1
  
     # show results
     return render_template('results.html', data=poll_data, votes=votes)
  
-app.run(debug=True)
+app.run(host="0.0.0.0", debug=True)
 
 #credits: https://code-maven.com/a-polling-station-with-flask

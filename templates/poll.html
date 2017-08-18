@@ -5,7 +5,7 @@
 </head>
 <body>
 <h1>{{ data.question }}</h1>
-<form action="/results">
+<form action="/results" method="POST">
   {% for e in data.fields %}
      <input type="radio" name="field" value="{{ e }}"> {{ e }}<br>
   {% endfor %}
